@@ -108,7 +108,7 @@ public interface ValidationResult<T> {
 
 				if( failReason.contains(modelObjectName) ) {
 					failReason = failReason.replaceAll(modelObjectName, "");
-					failReason = failReason.replaceAll("->get", "");
+					failReason = failReason.replaceAll("->get", " ");
 					failReason = failReason.replaceAll("[^\\w-]+", " ");
 
 					failureReason = Optional.of(failReason);
