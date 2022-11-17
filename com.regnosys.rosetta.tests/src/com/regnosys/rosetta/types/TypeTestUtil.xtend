@@ -1,7 +1,7 @@
 package com.regnosys.rosetta.types
 
 import com.google.inject.Inject
-import com.regnosys.rosetta.rosetta.RosettaExpression
+import com.regnosys.rosetta.rosetta.expression.RosettaExpression
 import com.regnosys.rosetta.services.RosettaGrammarAccess
 import java.io.StringReader
 import org.eclipse.xtext.parser.IParseResult
@@ -37,6 +37,10 @@ class TypeTestUtil {
 	def void assertIsValidWithType(CharSequence expr, RListType expected) {
 		val e = expr.parseExpression
 		e.assertNoIssues
+		e.assertHasType(expected)
+	}
+	
+	def void assertHasType(RosettaExpression e, RListType expected) {
 		val t = e.type
 		assertEquals(expected, t)
 	}

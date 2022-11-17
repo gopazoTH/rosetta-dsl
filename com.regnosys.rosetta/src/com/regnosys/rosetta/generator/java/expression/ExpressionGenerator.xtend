@@ -9,38 +9,35 @@ import com.regnosys.rosetta.generator.java.util.JavaType
 import com.regnosys.rosetta.generator.util.RosettaAttributeExtensions
 import com.regnosys.rosetta.generator.util.RosettaFunctionExtensions
 import com.regnosys.rosetta.generator.util.Util
-import com.regnosys.rosetta.rosetta.RosettaAbsentExpression
-import com.regnosys.rosetta.rosetta.RosettaBigDecimalLiteral
-import com.regnosys.rosetta.rosetta.RosettaBinaryOperation
-import com.regnosys.rosetta.rosetta.RosettaBooleanLiteral
-import com.regnosys.rosetta.rosetta.RosettaCallableCall
+import com.regnosys.rosetta.rosetta.expression.RosettaAbsentExpression
+import com.regnosys.rosetta.rosetta.expression.RosettaBigDecimalLiteral
+import com.regnosys.rosetta.rosetta.expression.RosettaBinaryOperation
+import com.regnosys.rosetta.rosetta.expression.RosettaBooleanLiteral
+import com.regnosys.rosetta.rosetta.expression.RosettaCallableCall
 import com.regnosys.rosetta.rosetta.RosettaCallableWithArgs
-import com.regnosys.rosetta.rosetta.RosettaCallableWithArgsCall
-import com.regnosys.rosetta.rosetta.RosettaConditionalExpression
-import com.regnosys.rosetta.rosetta.RosettaContainsExpression
-import com.regnosys.rosetta.rosetta.RosettaCountOperation
-import com.regnosys.rosetta.rosetta.RosettaDisjointExpression
+import com.regnosys.rosetta.rosetta.expression.RosettaCallableWithArgsCall
+import com.regnosys.rosetta.rosetta.expression.RosettaConditionalExpression
+import com.regnosys.rosetta.rosetta.expression.RosettaCountOperation
 import com.regnosys.rosetta.rosetta.RosettaEnumValue
 import com.regnosys.rosetta.rosetta.RosettaEnumValueReference
 import com.regnosys.rosetta.rosetta.RosettaEnumeration
-import com.regnosys.rosetta.rosetta.RosettaExistsExpression
-import com.regnosys.rosetta.rosetta.RosettaExpression
+import com.regnosys.rosetta.rosetta.expression.RosettaExistsExpression
+import com.regnosys.rosetta.rosetta.expression.RosettaExpression
 import com.regnosys.rosetta.rosetta.RosettaExternalFunction
 import com.regnosys.rosetta.rosetta.RosettaFeature
-import com.regnosys.rosetta.rosetta.RosettaFeatureCall
-import com.regnosys.rosetta.rosetta.RosettaIntLiteral
-import com.regnosys.rosetta.rosetta.RosettaLiteral
+import com.regnosys.rosetta.rosetta.expression.RosettaFeatureCall
+import com.regnosys.rosetta.rosetta.expression.RosettaIntLiteral
+import com.regnosys.rosetta.rosetta.expression.RosettaLiteral
 import com.regnosys.rosetta.rosetta.RosettaMetaType
 import com.regnosys.rosetta.rosetta.RosettaModel
-import com.regnosys.rosetta.rosetta.RosettaOnlyExistsExpression
-import com.regnosys.rosetta.rosetta.RosettaStringLiteral
+import com.regnosys.rosetta.rosetta.expression.RosettaOnlyExistsExpression
+import com.regnosys.rosetta.rosetta.expression.RosettaStringLiteral
 import com.regnosys.rosetta.rosetta.RosettaType
 import com.regnosys.rosetta.rosetta.simple.Attribute
-import com.regnosys.rosetta.rosetta.simple.ClosureParameter
+import com.regnosys.rosetta.rosetta.expression.ClosureParameter
 import com.regnosys.rosetta.rosetta.simple.Data
 import com.regnosys.rosetta.rosetta.simple.Function
-import com.regnosys.rosetta.rosetta.simple.ListLiteral
-import com.regnosys.rosetta.rosetta.simple.ListOperation
+import com.regnosys.rosetta.rosetta.expression.ListLiteral
 import com.regnosys.rosetta.rosetta.simple.ShortcutDeclaration
 import com.regnosys.rosetta.types.RosettaOperators
 import com.regnosys.rosetta.types.RosettaTypeProvider
@@ -53,21 +50,45 @@ import com.rosetta.model.lib.mapper.MapperC
 import com.rosetta.model.lib.mapper.MapperS
 import java.math.BigDecimal
 import java.util.HashMap
-import java.util.Optional
 import org.eclipse.xtend2.lib.StringConcatenationClient
 import org.eclipse.xtext.EcoreUtil2
 
 import static extension com.regnosys.rosetta.generator.java.enums.EnumHelper.convertValues
 import static extension com.regnosys.rosetta.generator.java.util.JavaClassTranslator.toJavaClass
 import static extension com.regnosys.rosetta.generator.java.util.JavaClassTranslator.toJavaType
-import com.regnosys.rosetta.rosetta.RosettaOnlyElement
 import java.util.Arrays
+import com.regnosys.rosetta.rosetta.expression.FilterOperation
+import com.regnosys.rosetta.rosetta.expression.NamedFunctionReference
+import com.regnosys.rosetta.rosetta.expression.InlineFunction
+import com.regnosys.rosetta.rosetta.expression.MapOperation
+import com.regnosys.rosetta.rosetta.expression.FlattenOperation
+import com.regnosys.rosetta.rosetta.expression.DistinctOperation
+import com.regnosys.rosetta.rosetta.expression.SumOperation
+import com.regnosys.rosetta.rosetta.expression.MinOperation
+import com.regnosys.rosetta.rosetta.expression.MaxOperation
+import com.regnosys.rosetta.rosetta.expression.SortOperation
+import com.regnosys.rosetta.rosetta.expression.ReverseOperation
+import com.regnosys.rosetta.rosetta.expression.ReduceOperation
+import com.regnosys.rosetta.rosetta.expression.RosettaUnaryOperation
+import com.regnosys.rosetta.rosetta.expression.FirstOperation
+import com.regnosys.rosetta.rosetta.expression.LastOperation
+import com.regnosys.rosetta.rosetta.expression.RosettaFunctionalOperation
+import com.regnosys.rosetta.rosetta.expression.ExistsModifier
+import com.regnosys.rosetta.rosetta.expression.RosettaOnlyElement
+import com.regnosys.rosetta.rosetta.expression.ModifiableBinaryOperation
+import com.regnosys.rosetta.rosetta.expression.CardinalityModifier
+import com.regnosys.rosetta.rosetta.expression.LogicalOperation
+import com.regnosys.rosetta.rosetta.expression.RosettaContainsExpression
+import com.regnosys.rosetta.rosetta.expression.RosettaDisjointExpression
+import com.regnosys.rosetta.rosetta.expression.ComparisonOperation
+import com.regnosys.rosetta.rosetta.expression.EqualityOperation
+import com.regnosys.rosetta.rosetta.expression.ExtractAllOperation
 
 class ExpressionGenerator {
 	
 	@Inject protected RosettaTypeProvider typeProvider
 	@Inject RosettaOperators operators
-	@Inject CardinalityProvider cardinalityProvider
+	@Inject extension CardinalityProvider cardinalityProvider
 	@Inject JavaNames.Factory factory 
 	@Inject RosettaFunctionExtensions funcExt
 	@Inject extension RosettaExtensions
@@ -107,9 +128,6 @@ class ExpressionGenerator {
 			RosettaCallableCall : {
 				callableCall(expr, params) 
 			}
-			RosettaOnlyElement : {
-				onlyElement(expr, params)
-			}
 			RosettaCallableWithArgsCall: {
 				callableWithArgs(expr, params)
 			}
@@ -131,20 +149,61 @@ class ExpressionGenerator {
 			RosettaConditionalExpression : {
 				'''«expr.genConditionalMapper(params)»'''
 			}
-			RosettaContainsExpression : {
-				'''«importMethod(ExpressionOperators,"contains")»(«expr.container.javaCode(params)», «expr.contained.javaCode(params)»)'''
-			}
-			RosettaDisjointExpression : {
-				'''«importMethod(ExpressionOperators,"disjoint")»(«expr.container.javaCode(params)», «expr.disjoint.javaCode(params)»)'''
-			}
 			ListLiteral : {
 				listLiteral(expr, params)
 			}
-			ListOperation : {
-				listOperation(expr, params)
+			DistinctOperation : {
+				distinctOperation(expr, params)
+			}
+			FirstOperation : {
+				firstOperation(expr, params)
+			}
+			FlattenOperation : {
+				flattenOperation(expr, params)
+			}
+			LastOperation : {
+				lastOperation(expr, params)
+			}
+			MaxOperation : {
+				maxOperation(expr, params)
+			}
+			MinOperation : {
+				minOperation(expr, params)
+			}
+			SumOperation : {
+				sumOperation(expr, params)
+			}
+			ReverseOperation : {
+				reverseOperation(expr, params)
+			}
+			RosettaOnlyElement : {
+				onlyElement(expr, params)
+			}
+			ReduceOperation : {
+				reduceOperation(expr, params)
+			}
+			FilterOperation : {
+				filterOperation(expr, params)
+			}
+			MapOperation : {
+				mapOperation(expr, params)
+			}
+			ExtractAllOperation : {
+				extractAllOperation(expr, params)
+			}
+			SortOperation : {
+				sortOperation(expr, params)
 			}
 			default: 
 				throw new UnsupportedOperationException("Unsupported expression type of " + expr?.class?.simpleName)
+		}
+	}
+	
+	private def StringConcatenationClient emptyToMapperJavaCode(RosettaExpression expr, ParamMap params, boolean multi) {
+		if (expr.isEmpty) {
+			'''«IF multi»«MapperC»«ELSE»«MapperS»«ENDIF».ofNull()'''
+		} else {
+			expr.javaCode(params)
 		}
 	}
 	
@@ -165,9 +224,9 @@ class ExpressionGenerator {
 	}
 
 	private def StringConcatenationClient genConditionalMapper(RosettaConditionalExpression expr, ParamMap params)'''
-		«IF !expr.ifthen.evalulatesToMapper»com.rosetta.model.lib.mapper.MapperUtils.toComparisonResult(«ENDIF»com.rosetta.model.lib.mapper.MapperUtils.«IF funcExt.needsBuilder(expr.ifthen)»fromDataType«ELSE»fromBuiltInType«ENDIF»(() -> {
+		«IF expr.ifthen.evaluatesToComparisonResult»com.rosetta.model.lib.mapper.MapperUtils.toComparisonResult(«ENDIF»com.rosetta.model.lib.mapper.MapperUtils.«IF funcExt.needsBuilder(expr.ifthen)»fromDataType«ELSE»fromBuiltInType«ENDIF»(() -> {
 			«expr.genConditional(params)»
-		})«IF !expr.ifthen.evalulatesToMapper»)«ENDIF»'''
+		})«IF expr.ifthen.evaluatesToComparisonResult»)«ENDIF»'''
 
 
 
@@ -178,13 +237,9 @@ class ExpressionGenerator {
 			}
 			«IF expr.childElseThen !== null»
 				«expr.childElseThen.genElseIf(params)»
-			«ELSEIF !expr.elsethen.isEmpty»
-				else {
-					return «expr.elsethen.javaCode(params)»;
-				}
 			«ELSE»
 				else {
-					return «IF cardinalityProvider.isMulti(expr.ifthen)»«MapperC»«ELSE»«MapperS»«ENDIF».ofNull();
+					return «expr.elsethen.emptyToMapperJavaCode(params, cardinalityProvider.isMulti(expr.ifthen))»;
 				}
 			«ENDIF»
 			'''
@@ -198,13 +253,9 @@ class ExpressionGenerator {
 			}
 			«IF next.childElseThen !== null»
 				«next.childElseThen.genElseIf(params)»
-			«ELSEIF !next.elsethen.isEmpty»
-				else {
-					return «next.elsethen.javaCode(params)»;
-				}
 			«ELSE»
 				else {
-					return «IF cardinalityProvider.isMulti(next.ifthen)»«MapperC»«ELSE»«MapperS»«ENDIF».ofNull();
+					return «next.elsethen.emptyToMapperJavaCode(params, cardinalityProvider.isMulti(next.ifthen))»;
 				}
 			«ENDIF»
 		«ENDIF»
@@ -269,9 +320,9 @@ class ExpressionGenerator {
 	}
 	
 	private def StringConcatenationClient doExistsExpr(RosettaExistsExpression exists, StringConcatenationClient arg) {
-		if(exists.single)
+		if(exists.modifier === ExistsModifier.SINGLE)
 			'''singleExists(«arg»)'''
-		else if(exists.multiple)
+		else if(exists.modifier === ExistsModifier.MULTIPLE)
 			'''multipleExists(«arg»)'''
 		else
 			'''exists(«arg»)'''
@@ -294,7 +345,7 @@ class ExpressionGenerator {
 	
 	protected def StringConcatenationClient callableCall(RosettaCallableCall expr, ParamMap params) {
 		if (expr.implicitReceiver) {
-			return '''«EcoreUtil2.getContainerOfType(expr, ListOperation).firstOrImplicit.getNameOrDefault.toDecoratedName»'''
+			return '''«EcoreUtil2.getContainerOfType(expr, InlineFunction).firstOrImplicit.getNameOrDefault.toDecoratedName»'''
 		}
 		val call = expr.callable
 		switch (call)  {
@@ -317,12 +368,8 @@ class ExpressionGenerator {
 			RosettaEnumeration: '''«call.toJavaType»'''
 			ClosureParameter: '''«call.getNameOrDefault.toDecoratedName»'''
 			default: 
-				throw new UnsupportedOperationException("Unsupported callable type of " + call?.class?.simpleName)
+				throw new UnsupportedOperationException("Unsupported callable type of " + call?.class?.name)
 		}
-	}
-	
-	protected def StringConcatenationClient onlyElement(RosettaOnlyElement expr, ParamMap params) {
-		return '''«MapperS».of(«expr.argument.javaCode(params)».get())'''
 	}
 	
 	def aliasCallArgs(ShortcutDeclaration alias) {
@@ -394,14 +441,25 @@ class ExpressionGenerator {
 			case ("/"): {
 				'''«MapperMaths».<«resultType.name.toJavaClass», «leftType», «rightType»>divide(«expr.left.javaCode(params)», «expr.right.javaCode(params)»)'''
 			}
+			case ("contains"): {
+				'''«importMethod(ExpressionOperators,"contains")»(«expr.left.javaCode(params)», «expr.right.javaCode(params)»)'''
+			}
+			case ("disjoint"): {
+				'''«importMethod(ExpressionOperators,"disjoint")»(«expr.left.javaCode(params)», «expr.right.javaCode(params)»)'''
+			}
+			case ("join"): {
+				'''
+				«expr.left.javaCode(params)»
+					.join(«IF expr.right !== null»«expr.right.javaCode(params)»«ELSE»«MapperS».of("")«ENDIF»)'''
+			}
 			default: {
-				toComparisonOp('''«expr.left.javaCode(params)»''', expr.operator, '''«expr.right.javaCode(params)»''', expr.cardOp)
+				toComparisonOp('''«expr.left.emptyToMapperJavaCode(params, false)»''', expr.operator, '''«expr.right.emptyToMapperJavaCode(params, false)»''', (expr as ModifiableBinaryOperation).cardMod)
 			}
 		}
 	}
 
 	def StringConcatenationClient toComparisonResult(RosettaExpression expr, ParamMap params) {
-		val wrap = expr.evalulatesToMapper
+		val wrap = !expr.evaluatesToComparisonResult
 		'''«IF wrap»«ComparisonResult».of(«ENDIF»«expr.javaCode(params)»«IF wrap»)«ENDIF»'''
 	}
 
@@ -423,39 +481,52 @@ class ExpressionGenerator {
 		val exprs = newHashSet
 		collectExpressions(expr, [exprs.add(it)])
 
-		return !exprs.empty && 
-			exprs.stream.allMatch[it instanceof RosettaFeatureCall ||
+		return expr.evaluatesToComparisonResult
+			|| !exprs.empty
+			&& exprs.stream.allMatch[it instanceof RosettaFeatureCall ||
 									it instanceof RosettaCallableCall ||
 									it instanceof RosettaCallableWithArgsCall ||
 									it instanceof RosettaLiteral && !(it.isEmpty && !(it.eContainer instanceof RosettaConditionalExpression)) ||
 									it instanceof RosettaCountOperation ||
-									it instanceof ListOperation ||
+									it instanceof RosettaFunctionalOperation ||
 									it instanceof RosettaOnlyElement ||
 									isArithmeticOperation(it)
 			]
 	}
+	private def boolean evaluatesToComparisonResult(RosettaExpression expr) {
+		return expr instanceof LogicalOperation
+			|| expr instanceof ComparisonOperation
+			|| expr instanceof EqualityOperation
+			|| expr instanceof RosettaContainsExpression
+			|| expr instanceof RosettaDisjointExpression
+			|| expr instanceof RosettaOnlyExistsExpression
+			|| expr instanceof RosettaExistsExpression
+			|| expr instanceof RosettaAbsentExpression
+			|| expr instanceof RosettaConditionalExpression && (expr as RosettaConditionalExpression).ifthen.evaluatesToComparisonResult
+	}
 	
-	private def StringConcatenationClient toComparisonOp(StringConcatenationClient left, String operator, StringConcatenationClient right, String cardOp) {
+	private def StringConcatenationClient toComparisonOp(StringConcatenationClient left, String operator, StringConcatenationClient right, CardinalityModifier cardMod) {
 		switch operator {
-			case ("="):
-				'''«importWildCard(ExpressionOperators)»areEqual(«left», «right», «toCardinalityOperator(cardOp, "All")»)'''
+			case ("="): {
+				'''«importWildCard(ExpressionOperators)»areEqual(«left», «right», «toCardinalityOperator(cardMod, CardinalityModifier.ALL)»)'''
+			}
 			case ("<>"):
-				'''«importWildCard(ExpressionOperators)»notEqual(«left», «right», «toCardinalityOperator(cardOp, "Any")»)'''
+				'''«importWildCard(ExpressionOperators)»notEqual(«left», «right», «toCardinalityOperator(cardMod, CardinalityModifier.ANY)»)'''
 			case ("<") : 
-				'''«importWildCard(ExpressionOperators)»lessThan(«left», «right», «toCardinalityOperator(cardOp, "All")»)'''
+				'''«importWildCard(ExpressionOperators)»lessThan(«left», «right», «toCardinalityOperator(cardMod, CardinalityModifier.ALL)»)'''
 			case ("<=") : 
-				'''«importWildCard(ExpressionOperators)»lessThanEquals(«left», «right», «toCardinalityOperator(cardOp, "All")»)'''
+				'''«importWildCard(ExpressionOperators)»lessThanEquals(«left», «right», «toCardinalityOperator(cardMod, CardinalityModifier.ALL)»)'''
 			case (">") : 
-				'''«importWildCard(ExpressionOperators)»greaterThan(«left», «right», «toCardinalityOperator(cardOp, "All")»)'''
+				'''«importWildCard(ExpressionOperators)»greaterThan(«left», «right», «toCardinalityOperator(cardMod, CardinalityModifier.ALL)»)'''
 			case (">=") : 
-				'''«importWildCard(ExpressionOperators)»greaterThanEquals(«left», «right», «toCardinalityOperator(cardOp, "All")»)'''
+				'''«importWildCard(ExpressionOperators)»greaterThanEquals(«left», «right», «toCardinalityOperator(cardMod, CardinalityModifier.ALL)»)'''
 			default: 
 				throw new UnsupportedOperationException("Unsupported binary operation of " + operator)
 		}
 	}
 	
-	private def StringConcatenationClient toCardinalityOperator(String cardOp, String defaultOp) {
-		'''«CardinalityOperator».«Optional.ofNullable(cardOp).map[toFirstUpper].orElse(defaultOp)»'''
+	private def StringConcatenationClient toCardinalityOperator(CardinalityModifier cardOp, CardinalityModifier defaultOp) {
+		'''«CardinalityOperator».«if (cardOp === CardinalityModifier.NONE) defaultOp.toString.toFirstUpper else cardOp.toString.toFirstUpper»'''
 	}
 	
 	/**
@@ -492,14 +563,14 @@ class ExpressionGenerator {
 	private def JavaType toJavaType(RosettaType rosType) {
 		val model = rosType.model
 		if(model === null)
-			throw new IllegalArgumentException('''Can not create type reference. «rosType.eClass?.name» «rosType.name» is not attached to a «RosettaModel.simpleName»''')
+			throw new IllegalArgumentException('''Can not create type reference. «rosType.eClass?.name» «rosType.name» is not attached to a «RosettaModel.name»''')
 		factory.create(model).toJavaType(rosType)
 	}
 	
 	private def javaNames(Attribute attr) {
 		val model = EcoreUtil2.getContainerOfType(attr, RosettaModel)
 		if(model === null)
-			throw new IllegalArgumentException('''Can not create type reference. «attr.eClass?.name» «attr.name» is not attached to a «RosettaModel.simpleName»''')
+			throw new IllegalArgumentException('''Can not create type reference. «attr.eClass?.name» «attr.name» is not attached to a «RosettaModel.name»''')
 		factory.create(model)
 	}
 	
@@ -523,119 +594,155 @@ class ExpressionGenerator {
 			'''.map("getMeta", a->a.getMeta()).map("get«meta.name.toFirstUpper»", a->a.get«meta.name.toFirstUpper»())'''
 		}
 	}
+	
+	def dispatch StringConcatenationClient functionReference(NamedFunctionReference ref, ParamMap params, boolean doCast, boolean needsMapper) {
+//		val callable = ref.function
+//		
+//		return switch (callable) {
+//			Function: {
+//				'''«callable.name.toFirstUpper»::evaluate'''
+//			}
+//			RosettaExternalFunction: {
+//				'''new «factory.create(callable.model).toJavaType(callable as RosettaCallableWithArgs)»()::execute'''
+//			}
+//			default: 
+//				throw new UnsupportedOperationException("Unsupported callable with args type of " + ref?.eClass?.name)
+//		}
+		throw new UnsupportedOperationException()
+	}
+	
+	def dispatch StringConcatenationClient functionReference(InlineFunction ref, ParamMap params, boolean doCast, boolean needsMapper) {
+		val isBodyMulti =  ref.isBodyExpressionMulti
+		val StringConcatenationClient bodyExpr = '''«ref.body.javaCode(params)»«IF needsMapper»«IF ref.body.evaluatesToComparisonResult».asMapper()«ENDIF»«ELSE»«IF ref.body.evalulatesToMapper»«IF isBodyMulti».getMulti()«ELSE».get()«ENDIF»«ENDIF»«ENDIF»'''
+		val StringConcatenationClient cast = if (doCast) {
+			val outputType =  ref.bodyRawType
+			'''(«IF needsMapper»«IF isBodyMulti»«MapperC»<«outputType»>«ELSE»«MapperS»<«outputType»>«ENDIF»«ELSE»«outputType»«ENDIF»)'''
+		} else {
+			''''''
+		}
 
-	def StringConcatenationClient listOperation(ListOperation op, ParamMap params) {
-		switch (op.operationKind) {
-			case FILTER: {
-				'''
-				«op.receiver.javaCode(params)»
-					.«IF op.isItemMulti»filterList«ELSE»filterItem«ENDIF»(«op.itemName» -> «op.body.javaCode(params)».get())'''
-			}
-			case MAP: {
-				val itemType =  op.inputType
-				val itemName =  op.itemName
-				val isBodyMulti =  op.isBodyExpressionMulti
-				val outputType =  op.outputType
-				val bodyExpr = op.body.javaCode(params)
-				
-				if (!op.isPreviousOperationMulti) {
-					if (isBodyMulti) {
-						'''
-						«op.receiver.javaCode(params)»
-							.mapSingleToList((/*«MapperS»<«itemType»>*/ «itemName») -> («MapperC»<«outputType»>) «bodyExpr»)'''
-					} else {
-						buildSingleItemListOperationOptionalBody(op, "mapSingleToItem", params)
-					}
-				} else {
-					if (op.isItemMulti) {
-						if (isBodyMulti) {
-							'''
-							«op.receiver.javaCode(params)»
-								.mapListToList((/*«MapperC»<«itemType»>*/ «itemName») -> («MapperC»<«outputType»>) «bodyExpr»)'''
-						} else {
-							'''
-							«op.receiver.javaCode(params)»
-								.mapListToItem((/*«MapperC»<«itemType»>*/ «itemName») -> («MapperS»<«outputType»>) «bodyExpr»)'''
-						}
-					} else {
-						if (isBodyMulti) {
-							'''
-							«op.receiver.javaCode(params)»
-								.mapItemToList((/*«MapperS»<«itemType»>*/ «itemName») -> («MapperC»<«outputType»>) «bodyExpr»)'''
-						} else {
-							buildSingleItemListOperationOptionalBody(op, "mapItem", params)
-						}
-					}
-				}
-			}
-			case FLATTEN: {
-				buildListOperationNoBody(op, "flattenList", params)
-			}
-			case DISTINCT: {
-				distinct(op.receiver.javaCode(params))
-			}
-			case SUM: {
-				buildListOperationNoBody(op, "sum" + op.inputRawType, params)
-			}
-			case MIN: {
-				buildSingleItemListOperationOptionalBody(op, "min", params)
-			}
-			case MAX: {
-				buildSingleItemListOperationOptionalBody(op, "max", params)
-			}
-			case SORT: {
-				buildSingleItemListOperationOptionalBody(op, "sort", params)
-			}
-			case REVERSE: {
-				buildListOperationNoBody(op, "reverse", params)
-			}
-			case REDUCE: {
-				val item1 = op.parameters.head.name.toDecoratedName
-				val item2 = op.parameters.last.name.toDecoratedName
-				val outputType =  op.bodyRawType
-				val bodyExpr = op.body.javaCode(params)
-				'''
-				«op.receiver.javaCode(params)»
-					.<«outputType»>reduce((«item1», «item2») -> («MapperS»<«outputType»>) «bodyExpr»)'''
-			}
-			case JOIN: {
-				'''
-				«op.receiver.javaCode(params)»
-					.join(«IF op.body !== null»«op.body.javaCode(params)»«ELSE»«MapperS».of("")«ENDIF»)'''
-			}
-			case FIRST: {
-				buildListOperationNoBody(op, "first", params)
-			}
-			case LAST: {
-				buildListOperationNoBody(op, "last", params)
-			}
-			default:
-				throw new UnsupportedOperationException("Unsupported operationKind of " + op.operationKind)
+		if (ref.parameters.size <= 1) {
+			val item = ref.itemName
+			'''«item» -> «cast»«bodyExpr»'''
+		} else {
+			val items = ref.parameters.map[name.toDecoratedName]
+			'''(«FOR item : items SEPARATOR ', '»«item»«ENDFOR») -> «cast»«bodyExpr»'''
 		}
 	}
 	
-	private def StringConcatenationClient buildListOperationNoBody(ListOperation op, String name, ParamMap params) {
+	def StringConcatenationClient onlyElement(RosettaOnlyElement expr, ParamMap params) {
+		return '''«MapperS».of(«expr.argument.javaCode(params)».get())'''
+	}
+	
+	def StringConcatenationClient filterOperation(FilterOperation op, ParamMap params) {
 		'''
-		«op.receiver.javaCode(params)»
+		«op.argument.emptyToMapperJavaCode(params, true)»
+			.«IF op.functionRef.isItemMulti»filterList«ELSE»filterItem«ENDIF»(«op.functionRef.functionReference(params, true, false)»)'''
+	}
+	
+	def StringConcatenationClient mapOperation(MapOperation op, ParamMap params) {
+		val isBodyMulti =  op.functionRef.isBodyExpressionMulti
+		val funcExpr = op.functionRef.functionReference(params, true, true)
+		
+		if (!op.isPreviousOperationMulti) {
+			if (isBodyMulti) {
+				'''
+				«op.argument.emptyToMapperJavaCode(params, false)»
+					.mapSingleToList(«funcExpr»)'''
+			} else {
+				buildSingleItemListOperationOptionalBody(op, "mapSingleToItem", params)
+			}
+		} else {
+			if (op.argument.isOutputListOfLists) {
+				if (isBodyMulti) {
+					'''
+					«op.argument.emptyToMapperJavaCode(params, false)»
+						.mapListToList(«funcExpr»)'''
+				} else {
+					'''
+					«op.argument.emptyToMapperJavaCode(params, false)»
+						.mapListToItem(«funcExpr»)'''
+				}
+			} else {
+				if (isBodyMulti) {
+					'''
+					«op.argument.emptyToMapperJavaCode(params, false)»
+						.mapItemToList(«funcExpr»)'''
+				} else {
+					buildSingleItemListOperationOptionalBody(op, "mapItem", params)
+				}
+			}
+		}
+	}
+	
+	def StringConcatenationClient extractAllOperation(ExtractAllOperation op, ParamMap params) {
+		val funcExpr = op.functionRef.functionReference(params, false, true)
+		'''
+		«op.argument.emptyToMapperJavaCode(params, false)»
+			.apply(«funcExpr»)'''
+	}
+	
+	def StringConcatenationClient flattenOperation(FlattenOperation op, ParamMap params) {
+		buildListOperationNoBody(op, "flattenList", params)
+	}
+	
+	def StringConcatenationClient distinctOperation(DistinctOperation op, ParamMap params) {
+		distinct(op.argument.javaCode(params))
+	}
+	
+	def StringConcatenationClient sumOperation(SumOperation op, ParamMap params) {
+		buildListOperationNoBody(op, "sum" + op.inputRawType, params)
+	}
+	
+	def StringConcatenationClient minOperation(MinOperation op, ParamMap params) {
+		buildSingleItemListOperationOptionalBody(op, "min", params)
+	}
+	
+	def StringConcatenationClient maxOperation(MaxOperation op, ParamMap params) {
+		buildSingleItemListOperationOptionalBody(op, "max", params)
+	}
+	
+	def StringConcatenationClient sortOperation(SortOperation op, ParamMap params) {
+		buildSingleItemListOperationOptionalBody(op, "sort", params)
+	}
+	
+	def StringConcatenationClient reverseOperation(ReverseOperation op, ParamMap params) {
+		buildListOperationNoBody(op, "reverse", params)
+	}
+	
+	def StringConcatenationClient reduceOperation(ReduceOperation op, ParamMap params) {
+		val outputType =  op.functionRef.bodyRawType
+		'''
+		«op.argument.javaCode(params)»
+			.<«outputType»>reduce(«op.functionRef.functionReference(params, true, true)»)'''
+	}
+	
+	def StringConcatenationClient firstOperation(FirstOperation op, ParamMap params) {
+		buildListOperationNoBody(op, "first", params)
+	}
+	
+	def StringConcatenationClient lastOperation(LastOperation op, ParamMap params) {
+		buildListOperationNoBody(op, "last", params)
+	}
+	
+	private def StringConcatenationClient buildListOperationNoBody(RosettaUnaryOperation op, String name, ParamMap params) {
+		'''
+		«op.argument.emptyToMapperJavaCode(params, true)»
 			.«name»()'''	
 	}
 	
-	private def StringConcatenationClient buildSingleItemListOperationOptionalBody(ListOperation op, String name, ParamMap params) {
-		if (op.body === null) {
+	private def StringConcatenationClient buildSingleItemListOperationOptionalBody(RosettaFunctionalOperation op, String name, ParamMap params) {
+		if (op.functionRef === null) {
 			buildListOperationNoBody(op, name, params)
 		} else {
 			buildSingleItemListOperation(op, name, params)
 		}
 	}
 	
-	private def StringConcatenationClient buildSingleItemListOperation(ListOperation op, String name, ParamMap params) {
-		val itemType =  op.inputType
-		val itemName =  op.itemName
-		val outputType = op.outputType
-		val bodyExpr = op.body.javaCode(params)
+	private def StringConcatenationClient buildSingleItemListOperation(RosettaFunctionalOperation op, String name, ParamMap params) {
 		'''
-		«op.receiver.javaCode(params)»
-			.«name»(/*«MapperS»<«itemType»>*/ «itemName» -> («MapperS»<«outputType»>) «bodyExpr»«IF !op.body.evalulatesToMapper».asMapper()«ENDIF»)'''	
+		«op.argument.emptyToMapperJavaCode(params, true)»
+			.«name»(«op.functionRef.functionReference(params, true, true)»)'''	
 	}
 	
 	private def StringConcatenationClient buildMapFuncAttribute(Attribute attribute) {
@@ -725,9 +832,6 @@ class ExpressionGenerator {
 			RosettaCountOperation : {
 				'''«toNodeLabel(expr.argument)» count'''
 			}
-			RosettaContainsExpression : {
-				'''«expr.container.toNodeLabel» contains «expr.contained.toNodeLabel»'''
-			}
 			RosettaCallableWithArgsCall :{
 				'''«expr.callable.name»(«FOR arg:expr.args SEPARATOR ", "»«arg.toNodeLabel»«ENDFOR»)'''
 			}
@@ -738,7 +842,7 @@ class ExpressionGenerator {
 				toNodeLabel(expr.argument)
 			}
 			default :
-				'''Unsupported expression type of «expr?.class?.simpleName»'''
+				'''Unsupported expression type of «expr?.class?.name»'''
 		}
 	}
 	
@@ -769,6 +873,6 @@ class ExpressionGenerator {
 	}
 	
 	def StringConcatenationClient toNodeLabel(RosettaBinaryOperation binOp) {
-		'''«binOp.left.toNodeLabel»«binOp.operator»«binOp.right.toNodeLabel»'''
+		'''«binOp.left.toNodeLabel» «binOp.operator» «binOp.right.toNodeLabel»'''
 	}
 }

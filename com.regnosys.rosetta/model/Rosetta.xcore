@@ -7,6 +7,7 @@ package com.regnosys.rosetta.rosetta
 import java.util.stream.Collectors
 import com.regnosys.rosetta.rosetta.simple.References
 import com.regnosys.rosetta.rosetta.simple.Data
+import com.regnosys.rosetta.rosetta.expression.RosettaExpression
 
 class RosettaModel extends RosettaDefinable {
 	String name
@@ -126,6 +127,11 @@ class RosettaEnumValue extends RosettaNamed, RosettaDefinable, RosettaFeature, R
 	}
 }
 
+class RosettaEnumValueReference extends RosettaExpression {
+	refers RosettaEnumeration enumeration
+	refers RosettaEnumValue value
+}
+
 class RosettaCardinality {
 	int inf
 	int sup
@@ -146,7 +152,7 @@ class RosettaCardinality {
 			return false;
 		}
 		if (this.isUnbounded()) {
-			return this.getInf() == other.getInf();
+			return other.isUnbounded() && this.getInf() == other.getInf();
 		}
 		return this.getInf() == other.getInf() && this.getSup() == other.getSup();
 	}
@@ -175,6 +181,21 @@ class RosettaCardinality {
 	}
 	op RosettaCardinality operator_plus(RosettaCardinality other) {
 		return this.add(other)
+	}
+	op RosettaCardinality multiply(RosettaCardinality other) {
+		val c = RosettaFactory.eINSTANCE.createRosettaCardinality
+		c.inf = inf * other.inf
+		if ((!unbounded && sup === 0) || (!other.unbounded && other.sup === 0)) {
+			c.sup = 0
+		} else if (unbounded || other.unbounded) {
+			c.unbounded = true
+		} else {
+			c.sup = sup * other.sup
+		}
+		return c
+	}
+	op RosettaCardinality operator_multiply(RosettaCardinality other) {
+		return this.multiply(other)
 	}
 	
 	derived boolean empty get {
@@ -283,63 +304,6 @@ class RosettaSegment extends RosettaRootElement, RosettaNamed {
 }
 
 /**********************************************************************
- * Expressions
- */
-
-abstract class RosettaExpression {
-}
-
-class RosettaOnlyElement extends RosettaExpression {
-	contains RosettaExpression argument
-}
-
-class RosettaCallableCall extends RosettaExpression {
-	boolean implicitReceiver
-	refers RosettaCallable callable
-}
-
-class RosettaEnumValueReference extends RosettaExpression {
-	refers RosettaEnumeration enumeration
-	refers RosettaEnumValue value
-}
-
-abstract class RosettaLiteral extends RosettaExpression, RosettaTyped {
-	op String stringValue() {
-		return "Unknown Literal"
-	}
-}
-
-class RosettaBooleanLiteral extends RosettaLiteral {
-	boolean value
-	
-	op String stringValue() {
-		return Boolean.toString(value)
-	}
-}
-
-class RosettaStringLiteral extends RosettaLiteral {
-	String value
-	op String stringValue() {
-		return '"' + value + '"'
-	}
-}
-
-class RosettaBigDecimalLiteral extends RosettaLiteral {
-	String value
-	op String stringValue() {
-		return value
-	}
-}
-
-class RosettaIntLiteral extends RosettaLiteral {
-	String value
-	op String stringValue() {
-		return value
-	}
-}
-
-
-/**********************************************************************
  * Mappings
  */
 
@@ -383,74 +347,6 @@ class RosettaQualifiableConfiguration {
 enum RosettaQualifiableType {
 	None, Event, Product
 }
-
-
-/**********************************************************************
- * Calculations
- */
-
-class RosettaBinaryOperation extends RosettaExpression {
-	contains RosettaExpression left
-	String cardOp // when comparing things of cardinality should be 'all' or 'any' = should be null for single cardinality
-	String operator
-	contains RosettaExpression right
-}
-
-class ArithmeticOperation extends RosettaBinaryOperation {
-}
-class LogicalOperation extends RosettaBinaryOperation {
-}
-class EqualityOperation extends RosettaBinaryOperation {
-}
-class ComparisonOperation extends RosettaBinaryOperation {
-}
-
-class RosettaOnlyExistsExpression extends RosettaExpression {
-	contains RosettaExpression[] args
-}
-
-class RosettaExistsExpression extends RosettaExpression {
-	contains RosettaExpression argument
-    boolean single
-    boolean multiple
-}
-
-class RosettaAbsentExpression extends RosettaExpression {
-	contains RosettaExpression argument
-}
-
-class RosettaContainsExpression extends RosettaExpression {
-	contains RosettaExpression ^container
-	contains RosettaExpression contained
-}
-
-class RosettaDisjointExpression extends RosettaExpression {
-	contains RosettaExpression ^container
-	contains RosettaExpression disjoint
-}
-
-class RosettaFeatureCall extends RosettaExpression {
-	contains RosettaExpression receiver
-	refers RosettaFeature feature
-}
-
-class RosettaCountOperation extends RosettaExpression {
-	contains RosettaExpression argument
-}
-
-class RosettaConditionalExpression extends RosettaExpression {
-	contains RosettaExpression ^if
-	contains RosettaExpression ifthen
-	contains RosettaExpression elsethen
-	
-	boolean full // whether the conditional expression has an explicit `else` branch.
-}
-
-class RosettaCallableWithArgsCall extends RosettaExpression {
-	refers RosettaCallableWithArgs callable
-	contains RosettaExpression[] args
-}
-
 
 /*****************************************
  * Translate external synonym support
