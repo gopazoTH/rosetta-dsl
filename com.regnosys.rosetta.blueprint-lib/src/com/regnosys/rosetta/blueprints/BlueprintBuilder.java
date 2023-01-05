@@ -146,7 +146,6 @@ public class BlueprintBuilder<I,O, K1, K2> {
 	}
 	
 	public BlueprintInstance<I, O, K1, K2> toBlueprint(String uri, String blueprintName) {
-		return new BlueprintInstance<I, O, K1, K2>(uri, blueprintName, heads, 
-				tails.stream().map(Upstream.class::cast).collect(Collectors.toList()), sources, sinks, dataItemReportBuilder);
+		return new BlueprintInstance<I, O, K1, K2>(uri, blueprintName, heads, tails, sources, sinks, dataItemReportBuilder);
 	}	
 }
