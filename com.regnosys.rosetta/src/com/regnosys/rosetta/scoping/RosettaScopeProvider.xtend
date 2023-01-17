@@ -5,8 +5,6 @@ package com.regnosys.rosetta.scoping
 
 import com.google.common.base.Predicate
 import com.google.inject.Inject
-import com.regnosys.rosetta.RosettaExtensions
-import com.regnosys.rosetta.generator.util.RosettaFunctionExtensions
 import com.regnosys.rosetta.rosetta.RosettaEnumValueReference
 import com.regnosys.rosetta.rosetta.RosettaEnumeration
 import com.regnosys.rosetta.rosetta.RosettaExternalClass
@@ -53,6 +51,8 @@ import org.eclipse.xtext.resource.impl.AliasedEObjectDescription
 import com.regnosys.rosetta.rosetta.simple.Attribute
 import com.regnosys.rosetta.rosetta.RosettaNamed
 import com.regnosys.rosetta.rosetta.expression.RosettaSymbolReference
+import com.regnosys.rosetta.RosettaExtensions
+import com.regnosys.rosetta.generator.util.RosettaFunctionExtensions
 
 /**
  * This class contains custom scoping description.

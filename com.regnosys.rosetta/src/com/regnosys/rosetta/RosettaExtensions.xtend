@@ -1,8 +1,6 @@
 package com.regnosys.rosetta
 
 import com.google.common.base.CaseFormat
-import com.regnosys.rosetta.rosetta.RosettaBlueprint
-import com.regnosys.rosetta.rosetta.RosettaBlueprintReport
 import com.regnosys.rosetta.rosetta.RosettaEnumeration
 import com.regnosys.rosetta.rosetta.RosettaSynonym
 import com.regnosys.rosetta.rosetta.simple.Annotated
@@ -15,7 +13,6 @@ import java.util.List
 import java.util.Set
 import org.eclipse.emf.common.util.URI
 
-import static extension com.regnosys.rosetta.generator.util.RosettaAttributeExtensions.*
 import com.regnosys.rosetta.rosetta.expression.RosettaExpression
 import com.regnosys.rosetta.rosetta.expression.RosettaBinaryOperation
 import com.regnosys.rosetta.rosetta.expression.RosettaConditionalExpression
@@ -179,43 +176,5 @@ class RosettaExtensions {
 		val allUnderscore = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, conditionName)
 		val camel = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, allUnderscore)
 		return camel
-	}
-	
-	/**
-	 * Get all reporting rules for blueprint report
-	 */
-	def getAllReportingRules(RosettaBlueprintReport report) {
-		val rules = newHashSet
-		report.reportType.collectReportingRules([rules.add(it)], newHashSet)
-		return rules
-	}
-	
-	/**
-	 * Recursively collects all reporting rules for all attributes
-	 */
-	def void collectReportingRules(Data dataType, (RosettaBlueprint) => void visitor, Set<Data> collectedTypes) {
-		dataType.allNonOverridesAttributes.forEach[attr|
-			val attrType = attr.type
-			val attrEx = attr.toExpandedAttribute
-			if (attrEx.builtInType || attrEx.enum) {
-				val rule = attr.ruleReference?.reportingRule
-				if (rule !== null) {
-					visitor.apply(rule)
-				}
-			} else if (attrType instanceof Data) {
-				if (!collectedTypes.contains(attrType)) {
-					collectedTypes.add(attrType)
-					val attrRule = attr.ruleReference?.reportingRule
-					// only collect rules from nested type if no rule exists at the top level
-					// e.g. nested reporting rules are not supported (except for repeatable rules where only the top level rule should be collected) 
-					if (attrRule === null)
-						attrType.collectReportingRules(visitor, collectedTypes)
-					else 
-						visitor.apply(attrRule)
-				}
-			} else {
-				throw new IllegalArgumentException("Did not collect reporting rules from type " + attrType)
-			}
-		]	
 	}
 }

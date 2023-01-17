@@ -51,9 +51,6 @@ Workflow {
 				generateDeprecationValidation = true
 				composedCheck = "com.regnosys.rosetta.validation.RosettaValidator"
 			}
-			generator = {
-				generateXtendStub = true
-			}
 			junitSupport = {
 				junitVersion = "5"
 			}
