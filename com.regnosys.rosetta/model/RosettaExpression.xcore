@@ -9,29 +9,10 @@ package com.regnosys.rosetta.rosetta.expression
 interface RosettaExpression {
 }
 
-interface RosettaLiteral extends RosettaExpression {
-	op String stringValue()
-}
-
-class RosettaBooleanLiteral extends RosettaLiteral {
+class RosettaBooleanLiteral extends RosettaExpression {
 	boolean value
-	
-	op String stringValue() {
-		return Boolean.toString(value)
-	}
 }
 
-interface RosettaOperation extends RosettaExpression {
-	String operator
-}
-
-/**
- * Unary operations
- */
-
-interface RosettaUnaryOperation extends RosettaOperation {
+class RosettaExistsExpression extends RosettaExpression {
 	contains RosettaExpression argument
-}
-
-class RosettaExistsExpression extends RosettaUnaryOperation {
 }

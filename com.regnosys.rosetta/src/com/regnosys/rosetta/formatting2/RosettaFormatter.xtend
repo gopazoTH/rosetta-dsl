@@ -5,10 +5,10 @@ package com.regnosys.rosetta.formatting2
 
 import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
-import com.regnosys.rosetta.rosetta.expression.RosettaUnaryOperation
+import com.regnosys.rosetta.rosetta.expression.RosettaExistsExpression
 
 class RosettaFormatter extends AbstractFormatter2 {	
-	def dispatch void format(RosettaUnaryOperation expr, extension IFormattableDocument document) {		
+	def dispatch void format(RosettaExistsExpression expr, extension IFormattableDocument document) {		
 		expr.formatConditionally(
 			[extension doc |
 				set(

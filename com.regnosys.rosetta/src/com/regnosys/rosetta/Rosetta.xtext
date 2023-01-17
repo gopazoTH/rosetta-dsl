@@ -10,7 +10,7 @@ ExistsExpression returns RosettaExpression:
 	RosettaBooleanLiteral
 	(
 		=>(
-			({RosettaExistsExpression.argument=current} operator='exists')
+			({RosettaExistsExpression.argument=current} 'exists')
 			
 		)
 	)*
