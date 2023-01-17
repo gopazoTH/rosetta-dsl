@@ -3,65 +3,8 @@
  */
 package com.regnosys.rosetta
 
-import com.regnosys.rosetta.resource.RosettaFragmentProvider
-import com.regnosys.rosetta.resource.RosettaResourceDescriptionManager
-import com.regnosys.rosetta.resource.RosettaResourceDescriptionStrategy
-import com.regnosys.rosetta.scoping.RosettaQualifiedNameProvider
-import org.eclipse.xtext.naming.IQualifiedNameProvider
-import org.eclipse.xtext.resource.IFragmentProvider
-import org.eclipse.xtext.resource.IResourceDescription
-import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionStrategy
-import org.eclipse.xtext.parser.IEncodingProvider
-import com.google.inject.Binder
-import org.eclipse.xtext.service.DispatchingProvider
-import com.regnosys.rosetta.utils.ImplicitVariableUtil
-import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorFilter
-import com.regnosys.rosetta.validation.RetainXsemanticsIssuesOnGeneratedInputsFilter
-import org.eclipse.xtext.conversion.IValueConverterService
-import com.regnosys.rosetta.parsing.RosettaValueConverterService
-import com.regnosys.rosetta.parsing.BigDecimalConverter
-import com.regnosys.rosetta.formatting2.RosettaExpressionFormatter
 
 /* Use this class to register components to be used at runtime / without the Equinox extension registry.*/
 class RosettaRuntimeModule extends AbstractRosettaRuntimeModule {
-	
-	override Class<? extends IFragmentProvider> bindIFragmentProvider() {
-		RosettaFragmentProvider
-	}
-	
-	def Class<? extends DefaultResourceDescriptionStrategy> bindDefaultResourceDescriptionStrategy() {
-		RosettaResourceDescriptionStrategy
-	}
-	
-	override Class<? extends IQualifiedNameProvider> bindIQualifiedNameProvider() {
-		return RosettaQualifiedNameProvider
-	}
-	
-	def Class<? extends IResourceDescription.Manager> bindIResourceDescriptionManager() {
-		RosettaResourceDescriptionManager
-	}
-	
-    override void configureRuntimeEncodingProvider(Binder binder) {
-        binder.bind(IEncodingProvider)
-        	.annotatedWith(DispatchingProvider.Runtime)
-        	.to(UTF8EncodingProvider);
-    }
-    
-    def Class<? extends ImplicitVariableUtil> bindImplicitVariableUtil() {
-    	ImplicitVariableUtil
-    }
-    def Class<? extends XsemanticsValidatorFilter> bindXsemanticsValidatorFilter() {
-    	RetainXsemanticsIssuesOnGeneratedInputsFilter
-    }
-    
-    override Class<? extends IValueConverterService> bindIValueConverterService() {
-    	RosettaValueConverterService
-    }
-    def Class<? extends BigDecimalConverter> bindBigDecimalConverter() {
-    	BigDecimalConverter
-    }
-	
-	def Class<? extends RosettaExpressionFormatter> bindRosettaExpressionFormatter() {
-		RosettaExpressionFormatter
-	}
+
 }

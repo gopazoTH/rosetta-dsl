@@ -8,22 +8,6 @@
 <plugin>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated Rosetta -->
-      <package
-            uri="http://www.rosetta-model.com/Rosetta"
-            class="com.regnosys.rosetta.rosetta.RosettaPackage"
-            genModel="model/Rosetta.xcore"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated RosettaSimple -->
-      <package
-            uri="http://www.rosetta-model.com/RosettaSimple"
-            class="com.regnosys.rosetta.rosetta.simple.SimplePackage"
-            genModel="model/RosettaSimple.xcore"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated RosettaExpression -->
       <package
             uri="http://www.rosetta-model.com/RosettaExpression"

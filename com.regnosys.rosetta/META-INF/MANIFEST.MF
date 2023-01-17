@@ -8,7 +8,6 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Require-Bundle: com.google.guava,
- com.regnosys.rosetta.lib,
  org.antlr.runtime;bundle-version="[3.2.0,3.2.1)",
  org.apache.commons.lang3,
  org.eclipse.core.runtime,
@@ -24,20 +23,15 @@ Require-Bundle: com.google.guava,
  org.eclipse.xtext,
  org.eclipse.xsemantics.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Import-Package: org.apache.log4j,
- com.rosetta.util
+Import-Package: org.apache.log4j
 Bundle-ActivationPolicy: lazy
 Export-Package: com.regnosys.rosetta,
  com.regnosys.rosetta.formatting2,
  com.regnosys.rosetta.parser.antlr,
  com.regnosys.rosetta.parser.antlr.internal,
- com.regnosys.rosetta.resource,
- com.regnosys.rosetta.rosetta,
  com.regnosys.rosetta.rosetta.expression,
- com.regnosys.rosetta.rosetta.simple,
  com.regnosys.rosetta.scoping,
  com.regnosys.rosetta.serializer,
  com.regnosys.rosetta.services,
- com.regnosys.rosetta.types,
- com.regnosys.rosetta.utils,
- com.regnosys.rosetta.validation
+ com.regnosys.rosetta.validation,
+ com.regnosys.rosetta.generator

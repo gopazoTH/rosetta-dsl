@@ -19,13 +19,7 @@ class RosettaExpressionFormattingTest {
 	def void testIndexOutOfBounds() {
 		assertFormatted[
 			it.toBeFormatted = '''
-			namespace test
-
-			func ExpressionContainer:
-				output:
-					result int (0..*)
-				set result:
-					True exists
+			True exists
 			'''
 		]
 	}

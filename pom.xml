@@ -23,8 +23,6 @@ See the Apache License Version 2.0 for the specific language governing permissio
 
 	<properties>
 		<xtextVersion>2.27.0</xtextVersion>
-		<xsemantics.repository>1.22</xsemantics.repository>
-		<xsemantics.version>1.22.0</xsemantics.version>
 		<org.eclipse.emf.ecore.xcore-version>1.22.0</org.eclipse.emf.ecore.xcore-version>
 		<org.eclipse.emf.ecore.xcore.lib-version>1.6.0</org.eclipse.emf.ecore.xcore.lib-version>
 		<org.eclipse.emf.codegen.ecore-version>2.28.0</org.eclipse.emf.codegen.ecore-version>
@@ -51,15 +49,11 @@ See the Apache License Version 2.0 for the specific language governing permissio
 	</properties>
 	<modules>
 		<module>com.regnosys.rosetta.target</module>
-		<module>com.regnosys.rosetta.lib</module>
-		<module>com.regnosys.rosetta.blueprint.lib</module>
 		<module>com.regnosys.rosetta</module>
 		<module>com.regnosys.rosetta.tests</module>
 		<module>com.regnosys.rosetta.ui</module>
 		<module>com.regnosys.rosetta.ui.tests</module>
 		<module>com.regnosys.rosetta.ide</module>
-		<module>com.regnosys.rosetta.ide.tests</module>
-		<module>com.regnosys.rosetta.tools</module>
 	</modules>
 	<build>
 		<plugins>
@@ -351,13 +345,6 @@ See the Apache License Version 2.0 for the specific language governing permissio
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-		</repository>
-		<repository>
-			<!-- we also need this one because this is an eclipse project, so it needs to
-				resolve xsemantics runtime dependencies from the p2 repository -->
-			<id>Xsemantics</id>
-			<layout>p2</layout>
-			<url>https://download.eclipse.org/xsemantics/milestones/${xsemantics.repository}</url>
 		</repository>
 		<repository>
 			<id>Xtext Update Site</id>
