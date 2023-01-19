@@ -4,8 +4,6 @@
 package com.regnosys.rosetta
 
 import com.google.inject.Injector
-import com.regnosys.rosetta.rosetta.RosettaPackage
-import com.regnosys.rosetta.rosetta.simple.SimplePackage
 import org.eclipse.emf.ecore.EPackage
 import com.regnosys.rosetta.rosetta.expression.ExpressionPackage
 
@@ -22,13 +20,6 @@ class RosettaStandaloneSetup extends RosettaStandaloneSetupGenerated {
 	 * Register xcore model in standalone setup. 
 	 */
 	override register(Injector injector) {
-
-		if (!EPackage.Registry.INSTANCE.containsKey(RosettaPackage.eNS_URI)) {
-			EPackage.Registry.INSTANCE.put(RosettaPackage.eNS_URI, RosettaPackage.eINSTANCE);
-		}
-		if (!EPackage.Registry.INSTANCE.containsKey(SimplePackage.eNS_URI)) {
-			EPackage.Registry.INSTANCE.put(SimplePackage.eNS_URI, SimplePackage.eINSTANCE);
-		}
 		if (!EPackage.Registry.INSTANCE.containsKey(ExpressionPackage.eNS_URI)) {
 			EPackage.Registry.INSTANCE.put(ExpressionPackage.eNS_URI, ExpressionPackage.eINSTANCE);
 		}

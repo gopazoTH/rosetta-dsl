@@ -32,8 +32,6 @@ Workflow {
 			}
 		}
 		language = StandardLanguage {
-			referencedResource = "platform:/resource/com.regnosys.rosetta/model/Rosetta.xcore"
-			referencedResource = "platform:/resource/com.regnosys.rosetta/model/RosettaSimple.xcore"
 			referencedResource = "platform:/resource/com.regnosys.rosetta/model/RosettaExpression.xcore"
 			name = "com.regnosys.rosetta.Rosetta"
 			fileExtensions = "rosetta"
@@ -46,13 +44,10 @@ Workflow {
 				generateStub = false
 			}
 			validator = {
-				// composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
-				// Generates checks for @Deprecated grammar annotations, an IssueProvider and a corresponding PropertyPage
-				generateDeprecationValidation = true
-				composedCheck = "com.regnosys.rosetta.validation.RosettaValidator"
+				generateStub = false
 			}
 			generator = {
-				generateXtendStub = true
+				generateStub = false
 			}
 			junitSupport = {
 				junitVersion = "5"
