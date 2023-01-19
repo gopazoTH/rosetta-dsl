@@ -3,22 +3,11 @@
  */
 package com.regnosys.rosetta.formatting2
 
-import com.google.inject.Inject
 import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
-import org.eclipse.xtext.formatting2.FormatterRequest
-import com.regnosys.rosetta.rosetta.expression.RosettaExistsExpression
 
-class RosettaFormatter extends AbstractFormatter2 {	
-	@Inject RosettaExpressionFormatter expressionFormatter
-	
-	protected override void initialize(FormatterRequest request) {
-		super.initialize(request)
-		expressionFormatter.initialize(request)
-	}
-	
-
-	def dispatch void format(RosettaExistsExpression ele, extension IFormattableDocument document) {
-		expressionFormatter.formatExpression(ele, document)
+class RosettaFormatter extends AbstractFormatter2 {
+	override format(Object obj, IFormattableDocument document) {
+		
 	}
 }

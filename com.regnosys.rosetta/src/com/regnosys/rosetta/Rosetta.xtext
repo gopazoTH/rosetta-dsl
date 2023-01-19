@@ -1,20 +1,7 @@
 grammar com.regnosys.rosetta.Rosetta with org.eclipse.xtext.common.Terminals
 import "http://www.rosetta-model.com/RosettaExpression"
 
-
-RosettaModel returns RosettaExistsExpression:
-	RosettaCalcExpression
-;
-
-/**********************************************************************
- * Calculations
- */
-
-RosettaCalcExpression returns RosettaExistsExpression:
-	ListOperation
-;
-
-ListOperation returns RosettaExistsExpression:
+RosettaExistsExpression:
 	RosettaCalcPrimary
 	(
 		=>(
@@ -34,9 +21,6 @@ ListOperation returns RosettaExistsExpression:
 	)*
 ;
 
-/**
- * Primary operations
- */
 RosettaCalcPrimary returns RosettaExistsExpression:
-	'(' RosettaCalcExpression ')'
+	'(' RosettaExistsExpression ')'
 ;

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.^extension.ExtendWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.eclipse.xtext.testing.InjectWith
 import com.regnosys.rosetta.tests.RosettaInjectorProvider
-import org.eclipse.xtext.formatting2.FormatterPreferenceKeys
 import org.eclipse.xtext.testing.formatter.FormatterTestHelper
 
 @ExtendWith(InjectionExtension)
@@ -19,12 +18,10 @@ class RosettaExpressionFormattingTest {
 	@Test
 	def void parenthesesBug() {
 		assertFormatted[
-			preferences[
-				put(FormatterPreferenceKeys.maxLineWidth, 10);
-			]
-			it.useNodeModel = false
+			it.useNodeModel = false // test succeeds if replaced with `it.useSerializer = false`
 			it.expectation = '''
-			exists exists
+			exists
+				exists
 			'''
 			it.toBeFormatted = '''
 			exists
