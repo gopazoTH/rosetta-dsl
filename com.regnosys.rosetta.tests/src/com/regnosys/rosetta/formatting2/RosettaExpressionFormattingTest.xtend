@@ -20,12 +20,10 @@ class RosettaExpressionFormattingTest {
 		assertFormatted[
 			it.useNodeModel = false // test succeeds if replaced with `it.useSerializer = false`
 			it.expectation = '''
-			exists
-				exists
+			exists exists
 			'''
 			it.toBeFormatted = '''
-			exists
-				exists
+			exists exists
 			'''
 		]
 	}
